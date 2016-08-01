@@ -37,6 +37,7 @@ menu "Libraries"
     source "libs/libsel4simple/Kconfig"
     source "libs/libsel4simple-default/Kconfig"
     source "libs/libusbdrivers/Kconfig"
+    source "libs/libpci/Kconfig"
 endmenu
 
 menu "Applications"

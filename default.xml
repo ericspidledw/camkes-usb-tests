@@ -16,7 +16,11 @@
     />
 
     <remote name="seL4-projects"
-        fetch="."
+	fetch="."
+    />
+
+    <remote name="private"
+	    fetch="../~szhuang"
     />
 
     <!-- default revision for each project, and name of the remote -->
@@ -25,7 +29,7 @@
     />
 
     <!-- list of 'projects' (i.e repositories), path is relative to the path in remote above -->
-    <project remote="seL4-projects" name="camkes-usb-tests.git" path="projects/camkes-usb-tests">
+    <project remote="private" name="camkes-usb-tests.git" path="projects/camkes-usb-tests">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
 	<linkfile src="apps/storage" dest="apps/storage"/>
@@ -75,9 +79,10 @@
         <linkfile src="libcpio" dest="libs/libcpio"/>
         <linkfile src="libelf" dest="libs/libelf"/>
         <linkfile src="libutils" dest="libs/libutils"/>
+        <linkfile src="libpci" dest="libs/libpci"/>
     </project>
 
-    <project name="projects_libs.git" path="projects/projects_libs">
+    <project remote="seL4-projects" name="projects_libs.git" path="projects/projects_libs">
         <linkfile src="libusbdrivers" dest="libs/libusbdrivers"/>
     </project>
 
