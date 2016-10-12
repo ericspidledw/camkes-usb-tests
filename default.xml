@@ -12,15 +12,11 @@
 
 <manifest>
     <remote name="seL4"
-        fetch="../seL4"
+        fetch="."
     />
 
     <remote name="seL4-projects"
-	fetch="."
-    />
-
-    <remote name="private"
-	    fetch="../~szhuang"
+        fetch="../SEL4PROJ"
     />
 
     <!-- default revision for each project, and name of the remote -->
@@ -29,13 +25,13 @@
     />
 
     <!-- list of 'projects' (i.e repositories), path is relative to the path in remote above -->
-    <project remote="private" name="camkes-usb-tests.git" path="projects/camkes-usb-tests">
+    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
 	<linkfile src="apps/storage" dest="apps/storage"/>
     </project>
 
-    <project remote="seL4" name="seL4.git" path="kernel" revision="gtt_deliverable">
+    <project name="seL4.git" path="kernel" revision="gtt_deliverable">
         <linkfile src="libsel4" dest="libs/libsel4"/>
     </project>
 
@@ -82,7 +78,7 @@
         <linkfile src="libpci" dest="libs/libpci"/>
     </project>
 
-    <project remote="seL4-projects" name="projects_libs.git" path="projects/projects_libs">
+    <project name="projects_libs.git" path="projects/projects_libs">
         <linkfile src="libusbdrivers" dest="libs/libusbdrivers"/>
     </project>
 
