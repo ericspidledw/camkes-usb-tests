@@ -78,7 +78,7 @@
         <linkfile src="libpci" dest="libs/libpci"/>
     </project>
 
-    <project name="projects_libs.git" path="projects/projects_libs">
+    <project name="projects_libs.git" path="projects/projects_libs" revision="x86">
         <linkfile src="libusbdrivers" dest="libs/libusbdrivers"/>
     </project>
 
