@@ -10,5 +10,8 @@
 
 component Driver {
         control;
+        dataport Buf mem;
+        consumes DataAvailable irq;
+        uses IOPort port;
 }
 

@@ -12,10 +12,26 @@ import <std_connector.camkes>;
 
 import "components/Driver/Driver.camkes";
 
+component EHCI {
+    hardware;
+    dataport Buf mem;
+    provides IOPort port;
+    emits DataAvailable irq;
+}
+
 assembly {
         composition {
+                component EHCI ehci;
                 component Driver drv;
+
+	        connection seL4HardwareMMIO ehci_mem(from drv.mem, to ehci.mem);
+	        connection seL4HardwareInterrupt irq(from ehci.irq, to drv.irq);
+	        connection seL4HardwareIOPort pci(from drv.port, to ehci.port);
         }
 	configuration {
+	        ehci.mem_attributes = "0xc0715000:0x1000";
+	        ehci.irq_attributes = 16;
+		ehci.port_attributes = "0xCF8:0xCFF";
+		drv.dma_pool = 409600;
 	}
 }
