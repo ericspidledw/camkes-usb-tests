@@ -14,6 +14,28 @@
 
 #include <usb/usb.h>
 
+static void *mutex_init(void)
+{
+	return (void*)1234;
+}
+
+static int mutex_lock(void *mutex)
+{
+	m_lock();
+	return 0;
+}
+
+static int mutex_unlock(void *mutex)
+{
+	m_unlock();
+	return 0;
+}
+
+static int mutex_destroy(void *mutex)
+{
+	return 0;
+}
+
 static void usb_irq_handler(void *arg)
 {
 	usb_t *priv = (usb_t*)arg;
@@ -28,14 +50,20 @@ int run() {
     usb_t *usb;
     usb_dev_t usb_storage;
     ps_io_ops_t io_ops;
+    mutex_ops_t mutex_ops;
 
     printf("Starting the driver\n");
     printf("-------------------\n");
 
+    mutex_ops.mutex_init = mutex_init;
+    mutex_ops.mutex_lock = mutex_lock;
+    mutex_ops.mutex_unlock = mutex_unlock;
+    mutex_ops.mutex_destroy = mutex_destroy;
+
     camkes_io_ops(&io_ops);
     usb = malloc(sizeof(usb_t));
 
-    err = usb_init(USB_HOST2, &io_ops, usb);
+    err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, usb);
     assert(err);
 
     irq_reg_callback(usb_irq_handler, usb);

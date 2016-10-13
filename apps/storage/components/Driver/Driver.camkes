@@ -9,9 +9,10 @@
  */
 
 component Driver {
-        control;
-        dataport Buf mem;
-        consumes DataAvailable irq;
-        uses IOPort port;
+	control;
+	dataport Buf mem;
+	consumes DataAvailable irq;
+	uses IOPort port;
+	has mutex m;
 }
 
