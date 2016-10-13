@@ -14,5 +14,10 @@ ADL := storage.camkes
 Driver_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Driver/src/*.c)) 
 
-Driver_LIBS += usbdrivers pci
+Driver_LIBS += usbdrivers
+
+ifdef CONFIG_ARCH_X86
+Driver_LIBS += pci
+endif
+
 include ${PWD}/tools/camkes/camkes.mk

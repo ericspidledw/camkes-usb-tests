@@ -64,7 +64,7 @@ int run() {
     usb = malloc(sizeof(usb_t));
 
     err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, usb);
-    assert(err);
+    assert(!err);
 
     irq_reg_callback(usb_irq_handler, usb);
 

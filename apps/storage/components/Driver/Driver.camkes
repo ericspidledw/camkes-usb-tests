@@ -7,12 +7,19 @@
  *
  * @TAG(NICTA_BSD)
  */
+#include <autoconf.h>
 
 component Driver {
 	control;
 	dataport Buf mem;
 	consumes DataAvailable irq;
+#ifdef CONFIG_ARCH_ARM
+	dataport Buf phy;
+	dataport Buf clk;
+	dataport Buf alg;
+#elif CONFIG_ARCH_X86
 	uses IOPort port;
+#endif
 	has mutex m;
 }
 

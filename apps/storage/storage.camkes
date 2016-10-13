@@ -8,6 +8,7 @@
  * @TAG(NICTA_BSD)
  */
 
+#include <autoconf.h>
 import <std_connector.camkes>;
 
 import "components/Driver/Driver.camkes";
@@ -15,7 +16,13 @@ import "components/Driver/Driver.camkes";
 component EHCI {
     hardware;
     dataport Buf mem;
+#ifdef CONFIG_ARCH_ARM
+    dataport Buf phy;
+    dataport Buf clk;
+    dataport Buf alg;
+#elif CONFIG_ARCH_X86
     provides IOPort port;
+#endif
     emits DataAvailable irq;
 }
 
@@ -26,12 +33,26 @@ assembly {
 
 	        connection seL4HardwareMMIO ehci_mem(from drv.mem, to ehci.mem);
 	        connection seL4HardwareInterrupt irq(from ehci.irq, to drv.irq);
+#ifdef CONFIG_ARCH_ARM
+	        connection seL4HardwareMMIO ehci_phy(from drv.phy, to ehci.phy);
+	        connection seL4HardwareMMIO ehci_clk(from drv.clk, to ehci.clk);
+	        connection seL4HardwareMMIO ehci_alg(from drv.alg, to ehci.alg);
+#elif CONFIG_ARCH_X86
 	        connection seL4HardwareIOPort pci(from drv.port, to ehci.port);
+#endif
         }
 	configuration {
+#ifdef CONFIG_PLAT_PC99
 	        ehci.mem_attributes = "0xc0715000:0x1000";
 	        ehci.irq_attributes = 16;
 		ehci.port_attributes = "0xCF8:0xCFF";
+#elif CONFIG_PLAT_IMX6
+	        ehci.mem_attributes = "0x2184000:0x1000";
+	        ehci.phy_attributes = "0x20CA000:0x1000";
+	        ehci.clk_attributes = "0x20C4000:0x1000";
+	        ehci.alg_attributes = "0x20C8000:0x1000";
+	        ehci.irq_attributes = 72;
+#endif
 		drv.dma_pool = 409600;
 	}
 }
