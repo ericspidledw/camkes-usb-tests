@@ -10,26 +10,11 @@
  * @TAG(D61_BSD)
  */
 
-#include <autoconf.h>
 import "../../interfaces/USB.idl4";
 
-component Driver {
+component Flipper {
 	control;
-
-	/* EHCI controller */
-	dataport Buf mem;
-	consumes DataAvailable irq;
-#ifdef CONFIG_ARCH_ARM
-	dataport Buf phy;
-	dataport Buf clk;
-	dataport Buf alg;
-#elif CONFIG_ARCH_X86
-	uses IOPort port;
-#endif
-	has mutex m;
-
-	/* USB interface */
 	dataport Buf buf;
-	provides USB_CDC cdc;
+	uses USB_CDC cdc;
 }
 
