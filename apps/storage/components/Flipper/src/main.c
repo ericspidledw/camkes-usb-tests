@@ -14,21 +14,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int usb_cdc_read(void *udev, void *buf, int size)
-{
-	return cdc_read(NULL, size);
-}
+#define VID 0x03EB //Atmel
+#define DID 0x0008 //Flipper
 
-void usb_cdc_write(void *udev, void *buf, int size)
-{
-	cdc_write(NULL, size);
-}
+extern void set_flipper_postion(uintptr_t udev, int angle, int velocity);
+extern uint16_t report_flipper_postion(uintptr_t udev);
+extern void set_flipper_effort(uintptr_t udev, int8_t effort);
+extern void clear_fault(uintptr_t udev, uint16_t fault);
+extern void set_status(uintptr_t udev, uint8_t status);
 
 int run()
 {
-	printf("Starting the driver\n");
+	uintptr_t flipper = NULL;
+	uint16_t angle = 0;
+
+	printf("Starting the Flipper\n");
 	printf("-------------------\n");
 
-	printf("After the driver\n");
+	/* Find the device */
+	while (!flipper) {
+		flipper = cdc_find(VID, DID);
+	}
+	printf("Found flipper\n");
+
+	/* Connect to the sub class driver */
+	cdc_connect(flipper);
+
+	cdc_configure(flipper, 115200, 1, 0, 8);
+
+	/* Send Data */
+	clear_fault(flipper, 0xFFFF);
+	set_status(flipper, 4);
+
+	angle = report_flipper_postion(flipper);
+	printf("Flipper angle: %u\n", angle);
+
+	set_flipper_effort(flipper, 20);
+
+	angle = report_flipper_postion(flipper);
+	printf("Flipper angle: %u\n", angle);
+
+	printf("Well done, Flipper\n");
 	return 0;
 }

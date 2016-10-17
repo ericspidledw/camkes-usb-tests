@@ -14,8 +14,6 @@
 import "../../interfaces/USB.idl4";
 
 component Driver {
-	control;
-
 	/* EHCI controller */
 	dataport Buf mem;
 	consumes DataAvailable irq;

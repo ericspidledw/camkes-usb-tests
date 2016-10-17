@@ -14,7 +14,7 @@ import "../../interfaces/USB.idl4";
 
 component Flipper {
 	control;
-	dataport Buf buf;
+	dataport Buf fdata;
 	uses USB_CDC cdc;
 }
 

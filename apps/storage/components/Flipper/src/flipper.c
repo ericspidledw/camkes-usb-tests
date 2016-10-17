@@ -14,8 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <usb/drivers/cdc.h>
-
+#include <camkes.h>
 #include "lib_crc.h"
 
 #define MAX_PKT_SIZE 250
@@ -47,7 +46,7 @@ static uint16_t crc16(uint8_t *data, uint16_t size)
 	return crc;
 }
 
-static void send_packet(usb_dev_t udev, void *payload, int len)
+static void send_packet(uintptr_t udev, void *payload, int len)
 {
 	struct packet pkt;
 	uint16_t crc;
@@ -62,22 +61,24 @@ static void send_packet(usb_dev_t udev, void *payload, int len)
 
 	pkt.header_crc = (uint8_t)crc16(&pkt.length, 3);
 
-	usb_cdc_write(udev, &pkt, len + 5);
+	memcpy(fdata, &pkt, len + 5);
+	cdc_write(udev, len + 5);
 }
 
-static void receive_packet(usb_dev_t udev, void *buf, int len)
+static void receive_packet(uintptr_t udev, void *buf, int len)
 {
 	int ret;
 	char *tmp = calloc(1, MAX_PKT_SIZE);
 
-	ret = usb_cdc_read(udev, tmp, MAX_PKT_SIZE);
+	ret = cdc_read(udev, MAX_PKT_SIZE);
+	memcpy(tmp, fdata, ret);
 
 	memcpy(buf, tmp, ret < len ? ret : len);
 
 	free(tmp);
 }
 
-void set_flipper_effort(usb_dev_t udev, int8_t effort)
+void set_flipper_effort(uintptr_t udev, int8_t effort)
 {
 	char *payload = calloc(1, 3);
 
@@ -90,7 +91,7 @@ void set_flipper_effort(usb_dev_t udev, int8_t effort)
 	free(payload);
 }
 
-void clear_fault(usb_dev_t udev, uint16_t fault)
+void clear_fault(uintptr_t udev, uint16_t fault)
 {
 	char *payload = calloc(1, 3);
 
@@ -103,7 +104,7 @@ void clear_fault(usb_dev_t udev, uint16_t fault)
 	free(payload);
 }
 
-void set_status(usb_dev_t udev, uint8_t status)
+void set_status(uintptr_t udev, uint8_t status)
 {
 	char *payload = calloc(1, 2);
 
@@ -115,7 +116,7 @@ void set_status(usb_dev_t udev, uint8_t status)
 	free(payload);
 }
 
-void set_flipper_postion(usb_dev_t udev, int angle, int velocity)
+void set_flipper_postion(uintptr_t udev, int angle, int velocity)
 {
 	char *payload = calloc(1, 5);
 
@@ -130,7 +131,7 @@ void set_flipper_postion(usb_dev_t udev, int angle, int velocity)
 	free(payload);
 }
 
-uint16_t report_flipper_postion(usb_dev_t udev)
+uint16_t report_flipper_postion(uintptr_t udev)
 {
 	uint16_t angle;
 	char *payload = calloc(1, 2);

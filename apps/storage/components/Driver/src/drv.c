@@ -11,6 +11,7 @@
  */
 
 #include <camkes.h>
+#include <camkes/io.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -47,16 +48,13 @@ static void usb_irq_handler(void *arg)
 	irq_reg_callback(usb_irq_handler, priv);
 }
 
-int run()
+usb_t usb;
+ps_io_ops_t io_ops;
+mutex_ops_t mutex_ops;
+
+void pre_init(void)
 {
 	int err;
-	usb_t *usb;
-	usb_dev_t usb_storage;
-	ps_io_ops_t io_ops;
-	mutex_ops_t mutex_ops;
-
-	printf("Starting the driver\n");
-	printf("-------------------\n");
 
 	mutex_ops.mutex_init = mutex_init;
 	mutex_ops.mutex_lock = mutex_lock;
@@ -64,23 +62,10 @@ int run()
 	mutex_ops.mutex_destroy = mutex_destroy;
 
 	camkes_io_ops(&io_ops);
-	usb = malloc(sizeof(usb_t));
 
-	err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, usb);
+	err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, &usb);
 	assert(!err);
 
-	irq_reg_callback(usb_irq_handler, usb);
-
-	while (1) {
-		usb_storage = usb_get_device(usb, 5);
-		if (usb_storage) {
-			break;
-		}
-	}
-
-	usb_lsusb(usb, 1);
-	usb_storage_bind(usb_storage, NULL);
-
-	printf("After the driver\n");
-	return 0;
+	irq_reg_callback(usb_irq_handler, &usb);
 }
+

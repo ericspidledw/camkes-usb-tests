@@ -45,7 +45,7 @@ assembly {
 		connection seL4HardwareIOPort pci(from drv.port, to ehci.port);
 #endif
 		connection seL4RPCCall flip_usb(from flip.cdc, to drv.cdc);
-		connection seL4SharedData flip_data(from flip.buf, to drv.buf);
+		connection seL4SharedData flip_data(from flip.fdata, to drv.buf);
 	}
 	configuration {
 #ifdef CONFIG_PLAT_PC99
