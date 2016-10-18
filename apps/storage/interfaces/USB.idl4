@@ -19,3 +19,10 @@ procedure USB_CDC {
 	void write(in uintptr_t dev, in int size);
 	int read(in uintptr_t dev, in int size);
 };
+
+procedure USB_STORAGE {
+	uintptr_t find(in int vid, in int did);
+	int connect(in uintptr_t dev);
+	int init(in uintptr_t dev);
+	int get_capacity(in uintptr_t dev);
+};

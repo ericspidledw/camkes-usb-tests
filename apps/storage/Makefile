@@ -21,6 +21,9 @@ Flipper_CFILES := \
 Flipper_HFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Flipper/include/*.h))
 
+Disk_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Disk/src/*.c))
+
 Driver_LIBS += usbdrivers
 
 ifdef CONFIG_ARCH_X86

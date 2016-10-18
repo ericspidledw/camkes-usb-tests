@@ -15,6 +15,7 @@ import <std_connector.camkes>;
 
 import "components/Driver/Driver.camkes";
 import "components/Flipper/Flipper.camkes";
+import "components/Disk/Disk.camkes";
 
 component EHCI {
 	hardware;
@@ -34,6 +35,7 @@ assembly {
 		component EHCI ehci;
 		component Driver drv;
 		component Flipper flip;
+		component Disk disk;
 
 		connection seL4HardwareMMIO ehci_mem(from drv.mem, to ehci.mem);
 		connection seL4HardwareInterrupt irq(from ehci.irq, to drv.irq);
@@ -46,6 +48,9 @@ assembly {
 #endif
 		connection seL4RPCCall flip_usb(from flip.cdc, to drv.cdc);
 		connection seL4SharedData flip_data(from flip.fdata, to drv.buf);
+
+		connection seL4RPCCall disk_usb(from disk.disk, to drv.disk);
+		connection seL4SharedData disk_data(from disk.block, to drv.block);
 	}
 	configuration {
 #ifdef CONFIG_PLAT_PC99

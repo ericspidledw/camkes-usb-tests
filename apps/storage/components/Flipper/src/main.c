@@ -14,8 +14,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#ifdef CONFIG_ARCH_X86
 #define VID 0x03EB //Atmel
 #define DID 0x0008 //Flipper
+#else
+#define VID 0x1d50 //Black Sphere Tech
+#define DID 0x6018 //Black Magic Probe
+#endif
 
 extern void set_flipper_postion(uintptr_t udev, int angle, int velocity);
 extern uint16_t report_flipper_postion(uintptr_t udev);
