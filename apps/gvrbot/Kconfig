@@ -10,7 +10,7 @@
 # @TAG(D61_BSD)
 #
 
-config APP_STORAGE
-    bool "USB storage test"
+config APP_GVRBOT
+    bool "GVRBOT USB test"
     default n
     help

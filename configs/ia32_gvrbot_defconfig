@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # CAmkES USB tests project configuration
-# Thu Oct 13 17:56:16 2016
+# Thu Oct 20 17:47:38 2016
 #
 
 #
@@ -168,7 +168,7 @@ CONFIG_CAPDL_LOADER_MAX_IRQS=256
 #
 # USB Tests
 #
-CONFIG_APP_STORAGE=y
+CONFIG_APP_GVRBOT=y
 
 #
 # CAmkES Options

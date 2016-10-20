@@ -44,7 +44,7 @@ menu "Applications"
     source "apps/capdl-loader-experimental/Kconfig"
 
     menu "USB Tests"
-        source "apps/storage/Kconfig"
+        source "apps/gvrbot/Kconfig"
     endmenu
 
 endmenu

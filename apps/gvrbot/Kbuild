@@ -10,5 +10,5 @@
 # @TAG(D61_BSD)
 #
 
-apps-$(CONFIG_APP_STORAGE) += storage
-storage: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libusbdrivers libpci
+apps-$(CONFIG_APP_GVRBOT) += gvrbot
+gvrbot: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libusbdrivers libpci

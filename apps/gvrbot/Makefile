@@ -11,7 +11,7 @@
 #
 
 TARGETS := $(notdir ${SOURCE_DIR}).cdl
-ADL := storage.camkes
+ADL := gvrbot.camkes
 
 Driver_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Driver/src/*.c)) 
@@ -25,9 +25,6 @@ Mobility_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Mobility/src/*.c))
 Mobility_HFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
-
-Disk_CFILES := \
-    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Disk/src/*.c))
 
 Driver_LIBS += usbdrivers
 

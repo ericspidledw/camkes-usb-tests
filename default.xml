@@ -28,7 +28,7 @@
     <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
-	<linkfile src="apps/storage" dest="apps/storage"/>
+	<linkfile src="apps/gvrbot" dest="apps/gvrbot"/>
     </project>
 
     <project name="seL4.git" path="kernel" revision="gtt_deliverable">

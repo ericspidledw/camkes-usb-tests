@@ -29,8 +29,5 @@ component Driver {
 	/* USB interface */
 	dataport Buf buf;
 	provides USB_CDC cdc;
-
-	dataport Buf block;
-	provides USB_STORAGE disk;
 }
 

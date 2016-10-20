@@ -10,11 +10,13 @@
  * @TAG(D61_BSD)
  */
 
-import "../../interfaces/USB.idl4";
+procedure USB_CDC {
+	uintptr_t find(in int vid, in int did);
+	int connect(in uintptr_t dev);
 
-component Disk {
-	control;
-	dataport Buf block;
-	uses USB_STORAGE disk;
-}
+	void configure(in uintptr_t dev, in int bps, in int stop,
+			in int parity, in int bits);
+	void write(in uintptr_t dev, in int size);
+	int read(in uintptr_t dev, in int size);
+};
 
