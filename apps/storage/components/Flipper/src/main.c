@@ -24,9 +24,17 @@
 
 extern void set_flipper_postion(uintptr_t udev, int angle, int velocity);
 extern uint16_t report_flipper_postion(uintptr_t udev);
-extern void set_flipper_effort(uintptr_t udev, int8_t effort);
+extern void set_flipper_effort(uintptr_t udev, uint16_t effort);
 extern void clear_fault(uintptr_t udev, uint16_t fault);
 extern void set_status(uintptr_t udev, uint8_t status);
+
+static inline void udelay(uint32_t us)
+{
+	volatile uint32_t i;
+	for (; us > 0; us--) {
+		for (i = 0; i < 1000; i++);
+	}
+}
 
 int run()
 {
@@ -39,6 +47,7 @@ int run()
 	/* Find the device */
 	while (!flipper) {
 		flipper = cdc_find(VID, DID);
+		udelay(5000);
 	}
 	printf("Found flipper\n");
 
@@ -54,7 +63,7 @@ int run()
 	angle = report_flipper_postion(flipper);
 	printf("Flipper angle: %u\n", angle);
 
-	set_flipper_effort(flipper, 20);
+	set_flipper_effort(flipper, 30000);
 
 	angle = report_flipper_postion(flipper);
 	printf("Flipper angle: %u\n", angle);

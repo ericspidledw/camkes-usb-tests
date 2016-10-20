@@ -28,6 +28,8 @@
 #define OPCODE_SET_FLIPPER_POSITION    0x31
 #define OPCODE_REPORT_FLIPPER_POSITION 0x35
 
+#define OPCODE_SET_VEHICLE_VELOCITY    0x21
+
 struct packet {
 	uint8_t  magic;
 	uint8_t  length;
@@ -78,7 +80,7 @@ static void receive_packet(uintptr_t udev, void *buf, int len)
 	free(tmp);
 }
 
-void set_flipper_effort(uintptr_t udev, int8_t effort)
+void set_flipper_effort(uintptr_t udev, uint16_t effort)
 {
 	char *payload = calloc(1, 3);
 
@@ -148,5 +150,20 @@ uint16_t report_flipper_postion(uintptr_t udev)
 	free(payload);
 
 	return angle;
+}
+
+void set_vehicle_velocity(uintptr_t udev, uint16_t drive, uint16_t turn)
+{
+	char *payload = calloc(1, 5);
+
+	payload[0] = OPCODE_SET_VEHICLE_VELOCITY;
+	payload[1] = drive & 0xFF;
+	payload[2] = (drive & 0xFF00) >> 8;
+	payload[3] = turn & 0xFF;
+	payload[4] = (turn & 0xFF00) >> 8;
+
+	send_packet(udev, payload, 5);
+
+	free(payload);
 }
 
