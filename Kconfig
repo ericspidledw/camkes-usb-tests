@@ -45,6 +45,7 @@ menu "Applications"
 
     menu "USB Tests"
         source "apps/gvrbot/Kconfig"
+        source "apps/serial/Kconfig"
     endmenu
 
 endmenu
