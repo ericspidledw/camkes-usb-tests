@@ -1,4 +1,4 @@
-tcamkes-usb-tests
+camkes-usb-tests
 ===============
 
 Tests for the USB driver in CAmkES environment.
