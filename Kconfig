@@ -50,7 +50,7 @@ menu "Applications"
     menu "USB Tests"
         source "apps/gvrbot/Kconfig"
         source "apps/serial/Kconfig"
-        source "apps/vm/Kconfig"
+        source "apps/optiplex9020_onevm/Kconfig"
     endmenu
 
 endmenu
