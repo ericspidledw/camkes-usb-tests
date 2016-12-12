@@ -13,6 +13,7 @@
 #include <camkes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define VID 0x067b //Prolific Technology Inc.
 #define DID 0x2303 //USB-Serial Controller

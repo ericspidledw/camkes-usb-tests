@@ -54,15 +54,20 @@ assembly {
 	}
 	configuration {
 #ifdef CONFIG_PLAT_PC99
-		ehci.mem_attributes = "0xc0715000:0x1000";
-		ehci.irq_attributes = 16;
+		ehci.mem_paddr = 0xc0715000;
+		ehci.mem_size = 0x1000;
+		ehci.irq_irq_number = 16;
 		ehci.port_attributes = "0xCF8:0xCFF";
 #elif CONFIG_PLAT_IMX6
-		ehci.mem_attributes = "0x2184000:0x1000";
-		ehci.phy_attributes = "0x20CA000:0x1000";
-		ehci.clk_attributes = "0x20C4000:0x1000";
-		ehci.alg_attributes = "0x20C8000:0x1000";
-		ehci.irq_attributes = 72;
+		ehci.mem_paddr = 0x2184000;
+		ehci.mem_size = 0x1000;
+		ehci.phy_paddr = 0x20CA000;
+		ehci.phy_size = 0x1000;
+		ehci.clk_paddr = 0x20C4000;
+		ehci.clk_size = 0x1000;
+		ehci.alg_paddr = 0x20C8000;
+		ehci.alg_size = 0x1000;
+		ehci.irq_irq_number = 72;
 #endif
 		drv.dma_pool = 409600;
 	}

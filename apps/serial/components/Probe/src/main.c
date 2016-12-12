@@ -13,6 +13,7 @@
 #include <camkes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define VID 0x1d50 //Black Sphere Tech
 #define DID 0x6018 //Black Magic Probe
