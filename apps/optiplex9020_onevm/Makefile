@@ -38,6 +38,20 @@ Init0_CFILES += $(wildcard $(SOURCE_DIR)/src/*.c) \
 Init0_HFILES += $(wildcard $(SOURCE_DIR)/common/include/*.h) \
 				$(wildcard $(SOURCE_DIR)/common/shared_include/cross_vm_shared/*.h)
 
+Driver_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Driver/src/*.c))
+Driver_LIBS += usbdrivers pci
+
+Flipper_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Flipper/src/*.c))
+Flipper_HFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
+
+Mobility_CFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Mobility/src/*.c))
+Mobility_HFILES := \
+    $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
+
 # We want to run C99
 CFLAGS += -std=gnu99 "-DCAMKES_VM_CONFIG=${VM_CONFIG}" -I${SOURCE_DIR}/configurations -I${SOURCE_DIR}/../../../vm/components/VM/configurations
 

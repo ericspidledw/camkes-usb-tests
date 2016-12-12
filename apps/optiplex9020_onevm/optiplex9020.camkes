@@ -29,6 +29,9 @@ component Init0 {
 import <StringReverse/StringReverse.camkes>;
 
 component VM {
+
+    provides PutChar putchar;
+
     composition {
         VM_COMPOSITION_DEF()
         VM_PER_VM_COMP_DEF(0)
@@ -49,6 +52,9 @@ component VM {
 
         connection seL4RPCCall cross_vm_putchar(from string_reverse.putchar,
                                                 to serial.vm_putchar);
+
+
+        export serial.vm_putchar -> putchar;
     }
     configuration {
         VM_CONFIGURATION_DEF()

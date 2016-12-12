@@ -10,14 +10,66 @@
  * @TAG(D61_GPL)
  */
 
+#include <autoconf.h>
+import <std_connector.camkes>;
+
 import <VM/vm.camkes>;
-import <Echo/Echo.camkes>;
 import "optiplex9020.camkes";
 
+import "components/Driver/Driver.camkes";
+import "components/Flipper/Flipper.camkes";
+import "components/Mobility/Mobility.camkes";
+
+component EHCI {
+    hardware;
+    dataport Buf mem;
+    provides IOPort port;
+    emits DataAvailable irq;
+}
 
 assembly {
     composition {
         /* The VM sub component */
         component VM vm;
+
+        /* gvrbot components and connections */
+        component EHCI ehci;
+        component Driver drv;
+        component Flipper flip;
+        component Mobility mob;
+
+        connection seL4HardwareMMIO ehci_mem(from drv.mem, to ehci.mem);
+        connection seL4HardwareInterrupt irq(from ehci.irq, to drv.irq);
+        connection seL4HardwareIOPort pci(from drv.port, to ehci.port);
+        connection seL4RPCCall flip_usb(from flip.cdc, to drv.cdc);
+        connection seL4SharedData flip_data(from flip.fdata, to drv.buf);
+
+        connection seL4RPCCall mob_usb(from mob.cdc, to drv.cdc);
+        connection seL4SharedData mob_data(from mob.fdata, to drv.buf);
+
+        /* connect gvrbot components to serial server */
+        connection seL4RPCCall flipserial(from flip.putchar, to vm.putchar);
+        connection seL4RPCCall mobserial(from mob.putchar, to vm.putchar);
+    }
+    configuration {
+        /* gvrbot configuration */
+        ehci.mem_paddr = 0xc0715000;
+        ehci.mem_size = 0x1000;
+
+        ehci.irq_irq_type = "pci";
+        ehci.irq_irq_ioapic = 0;
+        ehci.irq_irq_ioapic_pin = 16;
+        ehci.irq_irq_vector = 16;
+
+        ehci.port_attributes = "0xCF8:0xCFF";
+        drv.dma_pool = 409600;
+
+        flip.heap_size = 0x10000;
+        mob.heap_size = 0x10000;
+        drv.heap_size = 0x10000;
+
+        /* gvrbot printing configuration */
+        flip.putchar_attributes = "10";
+        mob.putchar_attributes = "11";
     }
 }
