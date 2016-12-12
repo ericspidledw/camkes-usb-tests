@@ -30,7 +30,7 @@
     />
 
     <!-- list of 'projects' (i.e repositories), path is relative to the path in remote above -->
-    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current" revision="vm">
+    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
         <linkfile src="apps/optiplex9020_onevm" dest="apps/optiplex9020_onevm"/>
