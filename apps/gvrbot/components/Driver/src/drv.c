@@ -17,6 +17,10 @@
 
 #include <usb/usb.h>
 
+usb_t usb;
+ps_io_ops_t io_ops;
+mutex_ops_t mutex_ops;
+
 static void *mutex_init(void)
 {
 	return (void *)1234;
@@ -24,14 +28,12 @@ static void *mutex_init(void)
 
 static int mutex_lock(void *mutex)
 {
-	m_lock();
-	return 0;
+	return m_lock();
 }
 
 static int mutex_unlock(void *mutex)
 {
-	m_unlock();
-	return 0;
+	return m_unlock();
 }
 
 static int mutex_destroy(void *mutex)
@@ -39,18 +41,10 @@ static int mutex_destroy(void *mutex)
 	return 0;
 }
 
-static void usb_irq_handler(void *arg)
+void irq_handle(void)
 {
-	usb_t *priv = (usb_t *) arg;
-
-	usb_handle_irq(priv);
-
-	irq_reg_callback(usb_irq_handler, priv);
+	usb_handle_irq(&usb);
 }
-
-usb_t usb;
-ps_io_ops_t io_ops;
-mutex_ops_t mutex_ops;
 
 void pre_init(void)
 {
@@ -65,7 +59,5 @@ void pre_init(void)
 
 	err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, &usb);
 	assert(!err);
-
-	irq_reg_callback(usb_irq_handler, &usb);
 }
 
