@@ -30,7 +30,7 @@
     />
 
     <!-- list of 'projects' (i.e repositories), path is relative to the path in remote above -->
-    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current">
+    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current" revision="vm">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
         <linkfile src="apps/vm" dest="apps/vm"/>
