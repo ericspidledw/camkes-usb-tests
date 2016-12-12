@@ -15,7 +15,7 @@
         fetch="../sel4"
     />
 
-    <remote name="seL4-projects"
+    <remote name="sel4proj"
         fetch="../sel4proj"
     />
 
