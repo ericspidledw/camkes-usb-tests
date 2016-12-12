@@ -33,7 +33,7 @@
     <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current" revision="vm">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
-        <linkfile src="apps/vm" dest="apps/vm"/>
+        <linkfile src="apps/optiplex9020_onevm" dest="apps/optiplex9020_onevm"/>
         <linkfile src="apps/gvrbot" dest="apps/gvrbot"/>
         <linkfile src="apps/serial" dest="apps/serial"/>
     </project>
