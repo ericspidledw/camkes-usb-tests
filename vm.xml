@@ -19,13 +19,18 @@
         fetch="../sel4proj"
     />
 
+    <!-- remote points to same project as the manifest repo -->
+    <remote name="current"
+        fetch="."
+    />
+
     <!-- default revision for each project, and name of the remote -->
     <default revision="master"
         remote="seL4"
     />
 
     <!-- list of 'projects' (i.e repositories), path is relative to the path in remote above -->
-    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="sel4proj">
+    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
         <linkfile src="apps/vm" dest="apps/vm"/>
