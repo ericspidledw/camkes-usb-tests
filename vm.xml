@@ -89,7 +89,7 @@
         <linkfile src="libutils" dest="libs/libutils"/>
     </project>
 
-    <project name="projects_libs.git" path="projects/projects_libs" remote="sel4proj" revision="x86">
+    <project name="projects_libs.git" path="projects/projects_libs" remote="current" revision="x86">
         <linkfile src="libusbdrivers" dest="libs/libusbdrivers"/>
     </project>
 
