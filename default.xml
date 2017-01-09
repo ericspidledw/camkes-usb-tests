@@ -12,11 +12,16 @@
 
 <manifest>
     <remote name="seL4"
-        fetch="."
+        fetch="../sel4"
     />
 
-    <remote name="seL4-projects"
-        fetch="../SEL4PROJ"
+    <remote name="sel4proj"
+        fetch="../sel4proj"
+    />
+
+    <!-- remote points to same project as the manifest repo -->
+    <remote name="current"
+        fetch="."
     />
 
     <!-- default revision for each project, and name of the remote -->
@@ -25,14 +30,15 @@
     />
 
     <!-- list of 'projects' (i.e repositories), path is relative to the path in remote above -->
-    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests">
+    <project name="camkes-usb-tests.git" path="projects/camkes-usb-tests" remote="current">
         <linkfile src="Kconfig" dest="Kconfig"/>
         <linkfile src="configs" dest="configs"/>
-	<linkfile src="apps/gvrbot" dest="apps/gvrbot"/>
-	<linkfile src="apps/serial" dest="apps/serial"/>
+        <linkfile src="apps/optiplex9020_onevm" dest="apps/optiplex9020_onevm"/>
+        <linkfile src="apps/gvrbot" dest="apps/gvrbot"/>
+        <linkfile src="apps/serial" dest="apps/serial"/>
     </project>
 
-    <project name="seL4.git" path="kernel" revision="gtt_deliverable">
+    <project name="seL4.git" path="kernel">
         <linkfile src="libsel4" dest="libs/libsel4"/>
     </project>
 
@@ -42,7 +48,9 @@
         <linkfile src="kbuild-tool" dest="tools/kbuild"/>
     </project>
 
-    <project name="camkes-tool.git" path="tools/camkes" revision="gtt_deliverable">
+    <project remote="sel4proj" name="global-components.git" path="projects/global-components" revision="next"/>
+
+    <project name="camkes-tool.git" path="tools/camkes" revision="next">
         <linkfile src="toplevel.mk" dest="Makefile"/>
         <linkfile src="Kbuild" dest="Kbuild"/>
         <linkfile src="libsel4camkes" dest="libs/libsel4camkes"/>
@@ -50,37 +58,48 @@
         <linkfile src="docs/index.md" dest="README.md"/>
     </project>
 
-    <project name="capdl.git" path="projects/capdl" revision="gtt_deliverable">
+    <project name="capdl.git" path="projects/capdl">
         <linkfile src="capdl-loader-app" dest="apps/capdl-loader-experimental"/>
         <linkfile src="capDL-tool" dest="tools/capDL"/>
         <linkfile src="python-capdl-tool" dest="tools/python-capdl"/>
     </project>
 
-    <project name="seL4_libs.git" path="projects/seL4_libs" revision="gtt_deliverable">
+    <project name="seL4_libs.git" path="projects/seL4_libs">
+        <linkfile src="libsel4allocman" dest="libs/libsel4allocman"/>
+        <linkfile src="libsel4bench" dest="libs/libsel4bench"/>
+        <linkfile src="libsel4debug" dest="libs/libsel4debug"/>
         <linkfile src="libsel4muslcsys" dest="libs/libsel4muslcsys"/>
         <linkfile src="libsel4platsupport" dest="libs/libsel4platsupport"/>
-        <linkfile src="libsel4utils" dest="libs/libsel4utils"/>
-        <linkfile src="libsel4sync" dest="libs/libsel4sync"/>
-        <linkfile src="libsel4vspace" dest="libs/libsel4vspace"/>
-        <linkfile src="libsel4vka" dest="libs/libsel4vka"/>
-        <linkfile src="libsel4debug" dest="libs/libsel4debug"/>
         <linkfile src="libsel4simple" dest="libs/libsel4simple"/>
+        <linkfile src="libsel4simple-stable" dest="libs/libsel4simple-stable"/>
         <linkfile src="libsel4simple-default" dest="libs/libsel4simple-default"/>
-        <linkfile src="libsel4bench" dest="libs/libsel4bench"/>
+        <linkfile src="libsel4sync" dest="libs/libsel4sync"/>
+        <linkfile src="libsel4utils" dest="libs/libsel4utils"/>
+        <linkfile src="libsel4vka" dest="libs/libsel4vka"/>
+        <linkfile src="libsel4vmm" dest="libs/libsel4vmm"/>
+        <linkfile src="libsel4vspace" dest="libs/libsel4vspace"/>
     </project>
 
     <project name="util_libs.git" path="projects/util_libs">
-        <linkfile src="libplatsupport" dest="libs/libplatsupport"/>
         <linkfile src="libcpio" dest="libs/libcpio"/>
         <linkfile src="libelf" dest="libs/libelf"/>
-        <linkfile src="libutils" dest="libs/libutils"/>
+        <linkfile src="libethdrivers" dest="libs/libethdrivers"/>
         <linkfile src="libpci" dest="libs/libpci"/>
+        <linkfile src="libplatsupport" dest="libs/libplatsupport"/>
+        <linkfile src="libutils" dest="libs/libutils"/>
     </project>
 
-    <project name="projects_libs.git" path="projects/projects_libs" revision="x86">
+    <project name="projects_libs.git" path="projects/projects_libs" remote="current" revision="x86">
         <linkfile src="libusbdrivers" dest="libs/libusbdrivers"/>
     </project>
 
     <project name="musllibc.git" path="libs/libmuslc" revision="sel4"/>
+
+    <project name="camkes-vm.git" path="projects/vm">
+        <linkfile src="libsel4cxx" dest="libs/libsel4cxx"/>
+        <linkfile src="liblwip" dest="libs/liblwip"/>
+        <linkfile src="tools/elf" dest="tools/elf"/>
+    </project>
+
 </manifest>
 
