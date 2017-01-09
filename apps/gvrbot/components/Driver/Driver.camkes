@@ -15,7 +15,7 @@ import "../../interfaces/USB.idl4";
 
 component Driver {
 	/* EHCI controller */
-	dataport Buf mem;
+	dataport Buf(0x400) mem;
 	consumes DataAvailable irq;
 #ifdef CONFIG_ARCH_ARM
 	dataport Buf phy;
