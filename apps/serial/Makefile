@@ -25,7 +25,7 @@ Probe_CFILES := \
 Driver_LIBS += usbdrivers
 
 ifdef CONFIG_ARCH_X86
-Driver_LIBS += pci
+Driver_LIBS += pci sel4allocman sel4allocman sel4simple
 endif
 
 include ${PWD}/tools/camkes/camkes.mk

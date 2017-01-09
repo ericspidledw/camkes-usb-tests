@@ -63,6 +63,14 @@ assembly {
 
         ehci.port_attributes = "0xCF8:0xCFF";
         drv.dma_pool = 409600;
+#ifdef CONFIG_IOMMU
+        drv.simple = true;
+        drv.cnode_size_bits = 12;
+        drv.iospaces = "0x13:0x00:0x1a:0";
+        drv.iospace_id = 0x13;
+        drv.pci_bdf = "0:1a.0";
+        drv.simple_untyped20_pool = 2;
+#endif
 
         flip.heap_size = 0x10000;
         mob.heap_size = 0x10000;

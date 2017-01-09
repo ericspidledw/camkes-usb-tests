@@ -11,4 +11,4 @@
 #
 
 apps-$(CONFIG_APP_SERIAL) += serial
-serial: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libusbdrivers
+serial: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libusbdrivers libsel4allocman libsel4simple

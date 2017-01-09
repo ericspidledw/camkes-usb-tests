@@ -40,7 +40,7 @@ Init0_HFILES += $(wildcard $(SOURCE_DIR)/common/include/*.h) \
 
 Driver_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Driver/src/*.c))
-Driver_LIBS += usbdrivers pci
+Driver_LIBS += usbdrivers pci sel4allocman sel4simple
 
 Flipper_CFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/components/Flipper/src/*.c))

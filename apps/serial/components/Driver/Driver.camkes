@@ -26,6 +26,12 @@ component Driver {
 #endif
 	has mutex m;
 
+#ifdef CONFIG_IOMMU
+    attribute int iospace_id;
+    /* format for bdf is "BUS:DEV.fun" where BUS and DEV are hex and FUN is decimal */
+    attribute string pci_bdf;
+#endif
+
 	/* USB interface */
 	dataport Buf buf;
 	provides USB_CDC cdc;
