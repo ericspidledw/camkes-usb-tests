@@ -51,6 +51,7 @@ static int mutex_destroy(void *mutex)
 void irq_handle(void)
 {
 	usb_handle_irq(&usb);
+	irq_acknowledge();
 }
 
 void pre_init(void)

@@ -22,7 +22,7 @@ import "components/Mobility/Mobility.camkes";
 
 component EHCI {
     hardware;
-    dataport Buf mem;
+    dataport Buf(0x400) mem;
     provides IOPort port;
     emits DataAvailable irq;
 }
@@ -54,7 +54,7 @@ assembly {
     configuration {
         /* gvrbot configuration */
         ehci.mem_paddr = 0xc0715000;
-        ehci.mem_size = 0x1000;
+        ehci.mem_size = 0x400;
 
         ehci.irq_irq_type = "pci";
         ehci.irq_irq_ioapic = 0;
