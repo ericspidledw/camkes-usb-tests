@@ -12,10 +12,17 @@
 
 #include <camkes.h>
 #include <camkes/io.h>
+#include <camkes/dma.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include <usb/usb.h>
+#include <simple/simple.h>
+#include <allocman/bootstrap.h>
+#include <allocman/allocman.h>
+#include <allocman/vka.h>
+#include <sel4utils/mapping.h>
+#include <vka/capops.h>
 
 usb_t usb;
 ps_io_ops_t io_ops;
@@ -56,6 +63,83 @@ void pre_init(void)
 	mutex_ops.mutex_destroy = mutex_destroy;
 
 	camkes_io_ops(&io_ops);
+
+#ifdef CONFIG_IOMMU
+    /* Temporary hack to map the DMA memory into the iommu */
+    int error;
+    simple_t camkes_simple;
+    camkes_make_simple(&camkes_simple);
+    allocman_t *allocman;
+    vka_t vka;
+    static char allocator_mempool[65536];
+    /* Initialize allocator */
+    allocman = bootstrap_use_current_1level(
+            simple_get_cnode(&camkes_simple),
+            simple_get_cnode_size_bits(&camkes_simple),
+            simple_last_valid_cap(&camkes_simple) + 1,
+            BIT(simple_get_cnode_size_bits(&camkes_simple)),
+            sizeof(allocator_mempool), allocator_mempool
+    );
+    assert(allocman);
+    error = allocman_add_simple_untypeds(allocman, &camkes_simple);
+    allocman_make_vka(&vka, allocman);
+    cspacepath_t iospace;
+    error = vka_cspace_alloc_path(&vka, &iospace);
+    if (error) {
+        ZF_LOGF("Failed to allocate iospace slot");
+    }
+    int bus, dev, fun;
+    sscanf(pci_bdf, "%x:%x.%d", &bus, &dev, &fun);
+    int pci_bdf_int =  bus * 256 + dev * 8 + fun;
+    error = simple_get_iospace(&camkes_simple, iospace_id, pci_bdf_int, &iospace);
+    if (error) {
+        ZF_LOGF("Failed to get iospace");
+    }
+    int total_bufs = 1024;
+    int num_bufs = 0;
+    void **dma_bufs = malloc(sizeof(void*) * total_bufs);
+    if (!dma_bufs) {
+        ZF_LOGF("Failed to malloc");
+    }
+    while (1) {
+        if (num_bufs + 1 == total_bufs) {
+            total_bufs *= 2;
+            dma_bufs = realloc(dma_bufs, sizeof(void*) * total_bufs);
+            if (!dma_bufs) {
+                ZF_LOGF("Failed to realloc");
+            }
+        }
+        void *buf = camkes_dma_alloc(PAGE_SIZE_4K, PAGE_SIZE_4K);
+        if (!buf) {
+            break;
+        }
+        dma_bufs[num_bufs] = buf;
+        num_bufs++;
+        seL4_CPtr frame = camkes_dma_get_cptr(buf);
+        cspacepath_t frame_path;
+        uintptr_t paddr = camkes_dma_get_paddr(buf);
+        cspacepath_t frame_dup;
+        vka_cspace_make_path(&vka, frame, &frame_path);
+        error = vka_cspace_alloc_path(&vka, &frame_dup);
+        if (error) {
+            ZF_LOGF("Failed to allocate frame cap");
+        }
+        error = vka_cnode_copy(&frame_dup, &frame_path, seL4_AllRights);
+        if (error) {
+            ZF_LOGF("Faileed to copy frame");
+        }
+        vka_object_t pts[5];
+        int num_pts = 5;
+        error = sel4utils_map_iospace_page(&vka, iospace.capPtr, frame_dup.capPtr, paddr, seL4_AllRights, 1, PAGE_BITS_4K, pts, &num_pts);
+        if (error) {
+            ZF_LOGF("Failed to map iospace page");
+        }
+    }
+    for (int i = 0; i < num_bufs; i++) {
+        camkes_dma_free(dma_bufs[i], PAGE_SIZE_4K);
+    }
+    free(dma_bufs);
+#endif /* CONFIG_IOMMU */
 
 	err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, &usb);
 	assert(!err);

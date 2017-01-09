@@ -11,4 +11,4 @@
 #
 
 apps-$(CONFIG_APP_GVRBOT) += gvrbot
-gvrbot: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libusbdrivers libpci
+gvrbot: libsel4 libmuslc libsel4platsupport libsel4muslccamkes libsel4camkes libsel4sync libsel4debug libsel4bench libusbdrivers libpci libsel4simple libsel4allocman
