@@ -15,7 +15,11 @@ import "../../interfaces/USB.idl4";
 
 component Driver {
 	/* EHCI controller */
+#ifdef CONFIG_PLAT_PC99
 	dataport Buf(0x400) mem;
+#else
+	dataport Buf mem;
+#endif
 	consumes DataAvailable irq;
 #ifdef CONFIG_ARCH_ARM
 	dataport Buf phy;
@@ -25,6 +29,7 @@ component Driver {
 	uses IOPort port;
 #endif
 	has mutex m;
+	has mutex dma;
 
 #ifdef CONFIG_IOMMU
     attribute int iospace_id;

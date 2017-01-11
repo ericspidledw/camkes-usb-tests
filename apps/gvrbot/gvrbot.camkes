@@ -19,7 +19,11 @@ import "components/Mobility/Mobility.camkes";
 
 component EHCI {
 	hardware;
+#ifdef CONFIG_PLAT_PC99
 	dataport Buf(0x400) mem;
+#else
+	dataport Buf mem;
+#endif
 #ifdef CONFIG_ARCH_ARM
 	dataport Buf phy;
 	dataport Buf clk;

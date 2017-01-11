@@ -54,6 +54,33 @@ void irq_handle(void)
 	irq_acknowledge();
 }
 
+static void* (*dma_alloc)(void *cookie, size_t size, int align, int cached,
+		ps_mem_flags_t flags);
+static void (*dma_free)(void *cookie, void *addr, size_t size);
+
+static void* dma_alloc_hack(void *cookie, size_t size, int align, int cached,
+		ps_mem_flags_t flags)
+{
+	void *p = NULL;
+
+	dma_lock();
+	if (dma_alloc) {
+		p = dma_alloc(cookie, size, align, cached, flags);
+	}
+	dma_unlock();
+
+	return p;
+}
+
+static void dma_free_hack(void *cookie, void *addr, size_t size)
+{
+	dma_lock();
+	if (dma_free) {
+		dma_free(cookie, addr, size);
+	}
+	dma_unlock();
+}
+
 void pre_init(void)
 {
 	int err;
@@ -64,6 +91,12 @@ void pre_init(void)
 	mutex_ops.mutex_destroy = mutex_destroy;
 
 	camkes_io_ops(&io_ops);
+
+	dma_alloc = io_ops.dma_manager.dma_alloc_fn;
+	dma_free = io_ops.dma_manager.dma_free_fn;
+
+	io_ops.dma_manager.dma_alloc_fn = dma_alloc_hack;
+	io_ops.dma_manager.dma_free_fn = dma_free_hack;
 
 #ifdef CONFIG_IOMMU
     /* Temporary hack to map the DMA memory into the iommu */
