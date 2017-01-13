@@ -40,5 +40,11 @@ component Driver {
 	/* USB interface */
 	dataport Buf buf;
 	provides USB_CDC cdc;
+
+#ifdef CONFIG_ARCH_X86
+	/* PIT timer */
+	consumes PIRQ pit_irq;
+	uses IOPort pit_port;
+#endif
 }
 

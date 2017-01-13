@@ -14,7 +14,11 @@
 #include <usb/usb.h>
 #include <usb/drivers/cdc.h>
 
+#include <platsupport/timer.h>
+#include <platsupport/arch/tsc.h>
+
 extern usb_t usb;
+extern pstimer_t *tsc_timer;
 
 uintptr_t cdc_find(int vid, int did)
 {
@@ -76,11 +80,21 @@ void cdc_configure(uintptr_t dev, int bps, int stop, int parity, int bits)
 
 void cdc_write(uintptr_t dev, int size)
 {
+	uint64_t now = timer_get_time(tsc_timer);
 	usb_cdc_write((usb_dev_t)dev, (void*)buf, size);
+
+	printf("Write Time: %llu\n", timer_get_time(tsc_timer) - now);
 }
 
 int cdc_read(uintptr_t dev, int size)
 {
-	return usb_cdc_read((usb_dev_t)dev, (void*)buf, size);
+	int ret;
+	uint64_t now = timer_get_time(tsc_timer);
+
+	ret =  usb_cdc_read((usb_dev_t)dev, (void*)buf, size);
+
+	printf("Read Time: %llu\n", timer_get_time(tsc_timer) - now);
+
+	return ret;
 }
 

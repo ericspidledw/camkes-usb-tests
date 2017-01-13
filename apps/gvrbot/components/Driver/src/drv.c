@@ -24,9 +24,13 @@
 #include <sel4utils/mapping.h>
 #include <vka/capops.h>
 
+#include <platsupport/timer.h>
+
 usb_t usb;
 ps_io_ops_t io_ops;
 mutex_ops_t mutex_ops;
+pstimer_t *pit_timer;
+pstimer_t *tsc_timer;
 
 static void *mutex_init(void)
 {
@@ -52,6 +56,12 @@ void irq_handle(void)
 {
 	usb_handle_irq(&usb);
 	irq_acknowledge();
+}
+
+void pit_irq_handle(void)
+{
+	timer_handle_irq(pit_timer, 2);
+	pit_irq_acknowledge();
 }
 
 static void* (*dma_alloc)(void *cookie, size_t size, int align, int cached,
@@ -177,5 +187,8 @@ void pre_init(void)
 
 	err = usb_init(USB_HOST_DEFAULT, &io_ops, &mutex_ops, &usb);
 	assert(!err);
+
+	pit_timer = pit_get_timer(&io_ops.io_port_ops);
+	tsc_timer = tsc_get_timer(pit_timer);
 }
 

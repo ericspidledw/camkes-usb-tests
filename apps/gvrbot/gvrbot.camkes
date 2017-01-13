@@ -34,12 +34,23 @@ component EHCI {
 	emits DataAvailable irq;
 }
 
+#ifdef CONFIG_ARCH_X86
+component PIT {
+	hardware;
+	provides IOPort port;
+	emits PIRQ irq;
+}
+#endif
+
 assembly {
 	composition {
 		component EHCI ehci;
 		component Driver drv;
 		component Flipper flip;
 		component Mobility mob;
+#ifdef CONFIG_ARCH_X86
+		component PIT pit;
+#endif
 
 		connection seL4HardwareMMIO ehci_mem(from drv.mem, to ehci.mem);
 		connection seL4HardwareInterrupt irq(from ehci.irq, to drv.irq);
@@ -49,6 +60,8 @@ assembly {
 		connection seL4HardwareMMIO ehci_alg(from drv.alg, to ehci.alg);
 #elif CONFIG_ARCH_X86
 		connection seL4HardwareIOPort pci(from drv.port, to ehci.port);
+		connection seL4HardwareIOPort pitio(from drv.pit_port, to pit.port);
+		connection seL4HardwareInterrupt pit_irq(from pit.irq, to drv.pit_irq);
 #endif
 		connection seL4RPCCall flip_usb(from flip.cdc, to drv.cdc);
 		connection seL4SharedData flip_data(from flip.fdata, to drv.buf);
@@ -65,6 +78,12 @@ assembly {
 		ehci.irq_irq_ioapic_pin = 16;
 		ehci.irq_irq_vector = 16;
 		ehci.port_attributes = "0xCF8:0xCFF";
+
+		pit.port_attributes = "0x40:0x43";
+		pit.irq_irq_type = "isa";
+		pit.irq_irq_ioapic = 0;
+		pit.irq_irq_ioapic_pin = 2;
+		pit.irq_irq_vector = 2;
 #elif CONFIG_PLAT_IMX6
 		ehci.mem_paddr = 0x2184000;
 		ehci.mem_size = 0x1000;
