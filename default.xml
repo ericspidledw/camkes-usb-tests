@@ -80,6 +80,10 @@
         <linkfile src="libsel4vspace" dest="libs/libsel4vspace"/>
     </project>
 
+    <project remote="sel4proj" name="seL4_projects_libs.git" path="projects/seL4_projects_libs">
+        <linkfile src="libsel4dma" dest="libs/libsel4dma"/>
+    </project>
+
     <project name="util_libs.git" path="projects/util_libs">
         <linkfile src="libcpio" dest="libs/libcpio"/>
         <linkfile src="libelf" dest="libs/libelf"/>
