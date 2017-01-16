@@ -24,6 +24,7 @@
 #include <sel4utils/mapping.h>
 #include <vka/capops.h>
 
+#include <dma/dma.h>
 #include <platsupport/timer.h>
 
 usb_t usb;
@@ -64,31 +65,27 @@ void pit_irq_handle(void)
 	pit_irq_acknowledge();
 }
 
-static void* (*dma_alloc)(void *cookie, size_t size, int align, int cached,
-		ps_mem_flags_t flags);
-static void (*dma_free)(void *cookie, void *addr, size_t size);
-
-static void* dma_alloc_hack(void *cookie, size_t size, int align, int cached,
-		ps_mem_flags_t flags)
+static int dma_morecore(size_t min_size, int cached,
+		struct dma_mem_descriptor *dma_desc)
 {
-	void *p = NULL;
+	uintptr_t vaddr, paddr;
 
-	dma_lock();
-	if (dma_alloc) {
-		p = dma_alloc(cookie, size, align, cached, flags);
-	}
-	dma_unlock();
+	min_size = ROUND_UP(min_size, PAGE_SIZE_4K);
 
-	return p;
-}
+	vaddr = camkes_dma_alloc(min_size, PAGE_SIZE_4K);
+	assert(vaddr);
 
-static void dma_free_hack(void *cookie, void *addr, size_t size)
-{
-	dma_lock();
-	if (dma_free) {
-		dma_free(cookie, addr, size);
-	}
-	dma_unlock();
+	paddr = camkes_dma_get_paddr(vaddr);
+	assert(paddr);
+
+	dma_desc->vaddr = vaddr;
+	dma_desc->paddr = paddr;
+	dma_desc->cached = 0;
+	dma_desc->size_bits = PAGE_BITS_4K;
+	dma_desc->alloc_cookie = NULL;
+	dma_desc->cookie = NULL;
+
+	return 0;
 }
 
 void pre_init(void)
@@ -102,11 +99,7 @@ void pre_init(void)
 
 	camkes_io_ops(&io_ops);
 
-	dma_alloc = io_ops.dma_manager.dma_alloc_fn;
-	dma_free = io_ops.dma_manager.dma_free_fn;
-
-	io_ops.dma_manager.dma_alloc_fn = dma_alloc_hack;
-	io_ops.dma_manager.dma_free_fn = dma_free_hack;
+	dma_dmaman_init(dma_morecore, NULL, &io_ops.dma_manager);
 
 #ifdef CONFIG_IOMMU
     /* Temporary hack to map the DMA memory into the iommu */

@@ -26,7 +26,7 @@ Mobility_CFILES := \
 Mobility_HFILES := \
     $(patsubst ${SOURCE_DIR}/%,%,$(wildcard ${SOURCE_DIR}/include/*.h))
 
-Driver_LIBS += usbdrivers
+Driver_LIBS += usbdrivers sel4dma
 
 ifdef CONFIG_ARCH_X86
 Driver_LIBS += pci sel4allocman sel4simple
